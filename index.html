@@ -9,8 +9,6 @@
         <!--
         <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
         -->
-
-
         <link rel="apple-touch-icon" sizes="57x57" href="apple-icon-57x57.png">
         <link rel="apple-touch-icon" sizes="60x60" href="apple-icon-60x60.png">
         <link rel="apple-touch-icon" sizes="72x72" href="apple-icon-72x72.png">
@@ -28,11 +26,9 @@
         <meta name="msapplication-TileColor" content="#ffffff">
         <meta name="msapplication-TileImage" content="ms-icon-144x144.png">
         <meta name="theme-color" content="#ffffff">
-
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-title" content="GnuPG Cheatsheet">
-
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="css/app.css" media="screen">
@@ -41,302 +37,257 @@
         <!--[if lte IE 9]>
             <p class="browserupgrade">You are using an <em>outdated</em> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
-
         <!-- Add your site or application content here -->
-
         <nav id="menu">
-          <header>
-            <div>Navigation</div>
-          </header>
+            <header>
+                <div>Navigation</div>
+            </header>
             <ul id="toc">
             </ul>
         </nav>
-
-
-
         <main id="panel">
-
         <article>
+            <header class="section">
+                <h1>ConnectWise <em>Cheatsheet</em></h1>
+            </header>
 
+            <section class="section brown">
+                <h2>WiFi</h2>
+                <dl>
+                    <dt>Show All Wifi Profiles</dt>
+                    <dd>
+                        <pre>NETSH WLAN SHOW PROFILE</pre>
+                    </dd>
+                    <dt>Show Password for %%PROFILENAME%%</dt>
+                    <dd>
+                        <pre>NETSH WLAN SHOW PROFILE %%PROFILENAME%% KEY=CLEAR</pre>
+                    </dd>
+                    <dt>Show WiFi Networks</dt>
+                    <dd>
+                        <pre>netsh wlan show networks</pre>
+                    </dd>
+                    <dt>Show Interfaces</dt>
+                    <dd>
+                        <pre>netsh wlan show interfaces</pre>
+                    </dd>
+                    <dt>Export %%PROFILENAME%%</dt>
+                    <dd>
+                        <pre>netsh wlan export profile %%PROFILENAME%% folder=c:\temp\ key=clear</pre>
+                    </dd>
+                    <dt>Add %%PROFILENAME%% to All users on Computer</dt>
+                    <dd>
+                        <pre>netsh wlan add profile filename="%%PROFILENAME%%.xml" user=all</pre>
+                    </dd>
+                    <dt>Connect to %%PROFILENAME%%</dt>
+                    <dd>
+                        <pre>netsh wlan connect ssid=%%WIFI-NAME%% name=%%PROFILENAME%%</pre>
+                    </dd>
+                    <dt>Set Profile/WiFi Priority %%PROFILENAME%%</dt>
+                    <dd>
+                        <pre>netsh wlan set profileorder priority=1 interface="Wi-Fi" name=%%PROFILENAME%%</pre>
+                    </dd>
+                    <dt>Delete %%PROFILENAME%%</dt>
+                    <dd>
+                        <pre>netsh wlan delete profile "%%PROFILENAME%%"</pre>
+                    </dd>
+                </dl>
+            </section>
 
-        <header class="section">
-            <h1>ConnectWise <em>Cheatsheet</em></h1>
+            <section class="section blue">
+                <h2>User</h2>
+                <p>Local User Managment</p>
+                <dl>
+                    <dt>Add User</dt>
+                    <dd>
+                        <pre>net user /add $USERNAME$ $PASSWORD$</pre>
+                        <p>With the password you need to double the First symbol aka %% for %</p>
+                    </dd>
+                    <dt>Add User to Local/Device Administrators</dt>
+                    <dd>
+                        <pre>net localgroup administrators /add tetraadmin</pre>
+                        <pre>net localgroup administrators AzureAD\$USERNAME$ /add</pre>
+                        <p>For AzureAD user</p>
+                    </dd>
+                    <dt>Reset Local Account password</dt>
+                    <dd>
+                        <pre>net user $USERNAME$ $PASSWORD$</pre>
+                        <p>With the password you need to double the First symbol aka %% for %</p>
+                    </dd>
+                    <dt>Make Password never expire</dt>
+                    <dd>
+                        <pre>WMIC USERACCOUNT WHERE Name='$USERNAME$' SET PasswordExpires=FALSE</pre>
+                    </dd>
+                    <dt>Remove Local User</dt>
+                    <dd>
+                        <pre>net user $USERNAME$ /delete</pre>
+                    </dd>
+                </dl>
+            </section>
 
-        </header>
+            <section class="section violet">
+                <h2>Bitlocker</h2>
+                <p>Bitlocker Managment</p>
+                <dl>
+                    <dt>Get bitlocker key/password</dt>
+                    <dd>
+                        <pre>for /F "tokens=1,2" %%a in ('manage-bde -protectors -get C: -Type recoverypassword | findstr ID') do manage-bde -protectors -adbackup c: -id %%b</pre>
+                    </dd>
+                    <dt>Get C: Protectors</dt>
+                    <dd>
+                        <pre>manage-bde -protectors C: -get</pre>
+                    </dd>
+                </dl>
+            </section>
 
+            <section class="section orange">
+                <h2>Program's Managment</h2>
+                <p></p>
+                <dl>
+                    <dt>Get Installed ScreenConnect</dt>
+                    <dd>
+                        <pre>wmic product where "Name like '%%ScreenConnect%%'" get name</pre>
+                    </dd>
+                    <dt>Remove ScreenConnect</dt>
+                    <dd>
+                        <pre>wmic product where name="ScreenConnect Client (******ID HERE*****)" call uninstall /nointeractive</pre>
+                    </dd>
+                    <dt>Get All Installed Programs</dt>
+                    <dd>
+                        <pre>#!ps <br /> echo "get-wmiobject Win32_Product | ? { $_.Name -LIKE "*auto*" } | Sort-Object -Property Name |Format-Table IdentifyingNumber, Name, LocalPackage -AutoSize"</pre>
+                    </dd>
+                    <dt>Lookup Programs with %%NAME%%</dt>
+                    <dd>
+                        <pre>C:\Windows\system32\wbem\wmic.exe product where "Name like '%%NAME%%'" get name, IdentifyingNumber</pre>
+                    </dd>
+                </dl>
+            </section>
 
+            <section class="section yellow">
+                <h2>RECOVER PATH VARIABLE</h2>
+                <p></p>
+                <dl>
+                    <dt>RECOVER PATH VARIABLE</dt>
+                    <dd>
+                        <pre>C:\Windows\system32\setx /M PATH "C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\WindowsPowerShell\Scripts;C:\Program Files\dotnet\;%SystemRoot%\system32;%SystemRoot%;%SystemRoot%\System32\Wbem;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\;%SYSTEMROOT%\System32\OpenSSH\;%USERPROFILE%\AppData\Local\Microsoft\WindowsApps;%USERPROFILE%\.dotnet\tools;%SystemRoot%\system32\WindowsPowerShell\v1.0"</pre>
+                    </dd>
+                </dl>
+            </section>
 
+            <section class="section red">
+                <h2>GET DISK AND RAM INFO</h2>
+                <p></p>
+                <dl>
+                    <dt>Get Drive Model</dt>
+                    <dd>
+                        <pre>C:\Windows\system32\wbem\wmic.exe diskdrive get model</pre>
+                    </dd>
+                    <dt>Get Disk Size and Free Space</dt>
+                    <dd>
+                        <pre>C:\Windows\system32\wbem\wmic.exe logicaldisk get size, freespace, caption</pre>
+                    </dd>
+                    <dt>Get RAM Info</dt>
+                    <dd>
+                        <pre>C:\Windows\system32\wbem\wmic.exe memorychip list</pre>
+                    </dd>
+                </dl>
+            </section>
 
-        <section class="section brown">
-            <h2>WiFi</h2>
+            <section class="section blue">
+                <h2>CHECK TPM INSTALLED</h2>
+                <p></p>
+                <dl>
+                    <dt>Get TPM</dt>
+                    <dd>
+                        <pre>C:\Windows\system32\wbem\wmic.exe /namespace:\\root\CIMV2\Security\MicrosoftTpm path Win32_Tpm get /value</pre>
+                    </dd>
+                </dl>
+            </section>
 
-            <dl>
-                <dt>Show All Wifi Profiles</dt>
-                <dd>
-                    <pre>NETSH WLAN SHOW PROFILE</pre>
-                </dd>
-                <dt>Show Password for %%PROFILENAME%%</dt>
-                <dd>
-                    <pre>NETSH WLAN SHOW PROFILE %%PROFILENAME%% KEY=CLEAR</pre>
-                </dd>
-                <dt>Show WiFi Networks</dt>
-                <dd>
-                    <pre>netsh wlan show networks</pre>
-                </dd>
-                <dt>Show Interfaces</dt>
-                <dd>
-                    <pre>netsh wlan show interfaces</pre>
-                </dd>
-                <dt>Export %%PROFILENAME%%</dt>
-                <dd>
-                    <pre>netsh wlan export profile %%PROFILENAME%% folder=c:\temp\ key=clear</pre>
-                </dd>
-                <dt>Add %%PROFILENAME%% to All users on Computer</dt>
-                <dd>
-                    <pre>netsh wlan add profile filename="%%PROFILENAME%%.xml" user=all</pre>
-                </dd>
-                <dt>Connect to %%PROFILENAME%%</dt>
-                <dd>
-                    <pre>netsh wlan connect ssid=%%WIFI-NAME%% name=%%PROFILENAME%%</pre>
-                </dd>
-                <dt>Set Profile/WiFi Priority %%PROFILENAME%%</dt>
-                <dd>
-                    <pre>netsh wlan set profileorder priority=1 interface="Wi-Fi" name=%%PROFILENAME%%</pre>
-                </dd>
-                <dt>Delete %%PROFILENAME%%</dt>
-                <dd>
-                    <pre>netsh wlan delete profile "%%PROFILENAME%%"</pre>
-                </dd>
+            <section class="section green">
+                <h2>GET MS OFFICE PRODUCT KEY</h2>
+                <p></p>
+                <dl>
+                    <dt>Get Office Key's</dt>
+                    <dd>
+                        <pre>cscript "c:\Program Files\Microsoft Office\Office16\ospp.vbs" /dstatus</pre>
+                        <br><br>
+                        <pre>cscript "c:\Program Files (x86)\Microsoft Office\Office16\ospp.vbs" /dstatus</pre>
+                        <br><br>
+                        <pre>cscript "c:\Program Files\Microsoft Office\Office15\ospp.vbs" /dstatus</pre>
+                        <br><br>
+                        <pre>cscript "c:\Program Files (x86)\Microsoft Office\Office15\ospp.vbs" /dstatus</pre>
+                    </dd>
+                </dl>
+            </section>
 
+            <section class="section blue">
+                <h2>Rename Computer</h2>
+                <p></p>
+                <dl>
+                    <dt>Rename</dt>
+                    <dd>
+                        <pre>C:\Windows\system32\wbem\wmic.exe computersystem where name="%computername%" call rename name="%%NEWNAME%%"</pre>
+                        <p>Dont Change %computername% it is a windows var that auto uses the Computers name</p>
+                    </dd>
+                </dl>
+            </section>
 
-            </dl>
-
-        </section>
-
-
-        <section class="section blue">
-            <h2>User</h2>
-
-            <p>Local User Managment</p>
-            <dl>
-                <dt>Add User</dt>
-                <dd>
-                    <pre>net user /add $USERNAME$ $PASSWORD$</pre>
-                    <p>With the password you need to double the First symbol aka %% for %</p>
-                </dd>
-                <dt>Add User to Local/Device Administrators</dt>
-                <dd>
-                    <pre>net localgroup administrators /add tetraadmin</pre>
-                    <pre>net localgroup administrators AzureAD\$USERNAME$ /add</pre>
-                    <p>For AzureAD user</p>
-                </dd>
-                <dt>Reset Local Account password</dt>
-                <dd>
-                    <pre>net user $USERNAME$ $PASSWORD$</pre>
-                    <p>With the password you need to double the First symbol aka %% for %</p>
-                </dd>
-                <dt>Make Password never expire</dt>
-                <dd>
-                    <pre>WMIC USERACCOUNT WHERE Name='$USERNAME$' SET PasswordExpires=FALSE</pre>
-                </dd>
-                <dt>Remove Local User</dt>
-                <dd>
-                    <pre>net user $USERNAME$ /delete</pre>
-                </dd>
-            </dl>
-
-        </section>
-
-
-        <section class="section violet">
-            <h2>Bitlocker</h2>
-
-            <p>Bitlocker Managment</p>
-            <dl>
-                <dt>Get bitlocker key/password</dt>
-                <dd>
-                    <pre>for /F "tokens=1,2" %%a in ('manage-bde -protectors -get C: -Type recoverypassword | findstr ID') do manage-bde -protectors -adbackup c: -id %%b</pre>
-                </dd>
-                <dt>Get C: Protectors</dt>
-                <dd>
-                    <pre>manage-bde -protectors C: -get</pre>
-                </dd>
-            </dl>
-
-        </section>
-
-        <section class="section orange">
-            <h2>Program's Managment</h2>
-
-            <p></p>
-            <dl>
-                <dt>Get Installed ScreenConnect</dt>
-                <dd>
-                    <pre>wmic product where "Name like '%%ScreenConnect%%'" get name</pre>
-                </dd>
-                <dt>Remove ScreenConnect</dt>
-                <dd>
-                    <pre>wmic product where name="ScreenConnect Client (******ID HERE*****)" call uninstall /nointeractive</pre>
-                </dd>
-                <dt>Get All Installed Programs</dt>
-                <dd>
-                    <pre>#!ps <br /> echo "get-wmiobject Win32_Product | ? { $_.Name -LIKE "*auto*" } | Sort-Object -Property Name |Format-Table IdentifyingNumber, Name, LocalPackage -AutoSize"</pre>
-                </dd>
-                <dt>Lookup Programs with %%NAME%%</dt>
-                <dd>
-                    <pre>C:\Windows\system32\wbem\wmic.exe product where "Name like '%%NAME%%'" get name, IdentifyingNumber</pre>
-                </dd>
-            </dl>
-
-        </section>
-
-        <section class="section yellow">
-            <h2>RECOVER PATH VARIABLE</h2>
-
-            <p></p>
-            <dl>
-                <dt>RECOVER PATH VARIABLE</dt>
-                <dd>
-                    <pre>C:\Windows\system32\setx /M PATH "C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\WindowsPowerShell\Scripts;C:\Program Files\dotnet\;%SystemRoot%\system32;%SystemRoot%;%SystemRoot%\System32\Wbem;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\;%SYSTEMROOT%\System32\OpenSSH\;%USERPROFILE%\AppData\Local\Microsoft\WindowsApps;%USERPROFILE%\.dotnet\tools;%SystemRoot%\system32\WindowsPowerShell\v1.0"</pre>
-                </dd>
-            </dl>
-
-        </section>
-
-        <section class="section red">
-            <h2>GET DISK AND RAM INFO</h2>
-
-            <p></p>
-            <dl>
-                <dt>Get Drive Model</dt>
-                <dd>
-                    <pre>C:\Windows\system32\wbem\wmic.exe diskdrive get model</pre>
-                </dd>
-                <dt>Get Disk Size and Free Space</dt>
-                <dd>
-                    <pre>C:\Windows\system32\wbem\wmic.exe logicaldisk get size, freespace, caption</pre>
-                </dd>
-                <dt>Get RAM Info</dt>
-                <dd>
-                    <pre>C:\Windows\system32\wbem\wmic.exe memorychip list</pre>
-                </dd>
-            </dl>
-
-        </section>
-
-        <section class="section blue">
-            <h2>CHECK TPM INSTALLED</h2>
-
-            <p></p>
-            <dl>
-                <dt>Get TPM</dt>
-                <dd>
-                    <pre>C:\Windows\system32\wbem\wmic.exe /namespace:\\root\CIMV2\Security\MicrosoftTpm path Win32_Tpm get /value</pre>
-                </dd>
-            </dl>
-
-        </section>
-
-        <section class="section green">
-            <h2>GET MS OFFICE PRODUCT KEY</h2>
-
-            <p></p>
-            <dl>
-                <dt>Get Office Key's</dt>
-                <dd>
-                    <pre>cscript "c:\Program Files\Microsoft Office\Office16\ospp.vbs" /dstatus</pre>
-                    <br><br>
-                    <pre>cscript "c:\Program Files (x86)\Microsoft Office\Office16\ospp.vbs" /dstatus</pre>
-                    <br><br>
-                    <pre>cscript "c:\Program Files\Microsoft Office\Office15\ospp.vbs" /dstatus</pre>
-                    <br><br>
-                    <pre>cscript "c:\Program Files (x86)\Microsoft Office\Office15\ospp.vbs" /dstatus</pre>
-                </dd>
-            </dl>
-
-        </section>
-
-        <section class="section blue">
-            <h2>Rename Computer</h2>
-
-            <p></p>
-            <dl>
-                <dt>Rename</dt>
-                <dd>
-                    <pre>C:\Windows\system32\wbem\wmic.exe computersystem where name="%computername%" call rename name="%%NEWNAME%%"</pre>
-                    <p>Dont Change %computername% it is a windows var that auto uses the Computers name</p>
-                </dd>
-            </dl>
-
-        </section>
-
-        <section class="section yellow">
-            <h2>RESET AD RECOVER MODE PASSWORD</h2>
-
-            <p></p>
-            <dl>
-                <dt>RESET AD RECOVER MODE PASSWORD</dt>
-                <dd>
-                    <pre>cmd - as admin<br>ntdsutil<br>set dsrm password<br>reset password on server %%SERVERNAME%%<br>%%NEWPASSWORD%%<br>q<br>q</pre>
-                </dd>
-            </dl>
-
-        </section>
+            <section class="section yellow">
+                <h2>RESET AD RECOVER MODE PASSWORD</h2>
+                <p></p>
+                <dl>
+                    <dt>RESET AD RECOVER MODE PASSWORD</dt>
+                    <dd>
+                        <pre>cmd - as admin<br>ntdsutil<br>set dsrm password<br>reset password on server %%SERVERNAME%%<br>%%NEWPASSWORD%%<br>q<br>q</pre>
+                    </dd>
+                </dl>
+            </section>
 
         </article>
     </main>
-
     <script src="js/slideout.js"></script>
+
     <script>
-
-
-    function closenav(eve) {
-      //eve.preventDefault();
-      slideout.close();
-      return true;
-    }
-
-    var h1s = document.getElementsByTagName("h2");
-    var toc = document.getElementById("toc");
-    var h1n = 1;
-    for (var i = 0; i < h1s.length; i++) {
-        var h1 = h1s[i];
-        var anchor = document.createElement("a");
-        anchor.name = h1n;
-        h1.insertBefore(anchor, h1.firstChild);
-        h1.anchor = h1n;
-        var li = document.createElement("li");
-        var a = document.createElement("a");
-        a.onclick = closenav;
-        a.textContent = h1.textContent;
-        a.href = "#"+ h1n;
-        li.appendChild(a);
-        toc.appendChild(li);
-        h1n = h1n +1;
-    }
-
-
-      var slideout = new Slideout({
-        'panel': document.getElementById('panel'),
-        'menu': document.getElementById('menu'),
-        'padding': 256,
-        'tolerance': 40
-      });
-
-
-
-    slideout
-      .on('beforeopen', function() {
-        this.panel.classList.add('panel-open');
-      })
-      .on('open', function() {
-        this.panel.addEventListener('click', closenav);
-      })
-      .on('beforeclose', function() {
-        this.panel.classList.remove('panel-open');
-        this.panel.removeEventListener('click', closenav);
-      });
-
+        function closenav(eve) {
+        //eve.preventDefault();
+            slideout.close();
+            return true;
+        }
+        var h1s = document.getElementsByTagName("h2");
+        var toc = document.getElementById("toc");
+        var h1n = 1;
+        for (var i = 0; i < h1s.length; i++) {
+            var h1 = h1s[i];
+            var anchor = document.createElement("a");
+            anchor.name = h1n;
+            h1.insertBefore(anchor, h1.firstChild);
+            h1.anchor = h1n;
+            var li = document.createElement("li");
+            var a = document.createElement("a");
+            a.onclick = closenav;
+            a.textContent = h1.textContent;
+            a.href = "#"+ h1n;
+            li.appendChild(a);
+            toc.appendChild(li);
+            h1n = h1n +1;
+        }
+        var slideout = new Slideout({
+            'panel': document.getElementById('panel'),
+            'menu': document.getElementById('menu'),
+            'padding': 256,
+            'tolerance': 40
+        });
+        slideout
+        .on('beforeopen', function() {
+            this.panel.classList.add('panel-open');
+        })
+        .on('open', function() {
+            this.panel.addEventListener('click', closenav);
+        })
+        .on('beforeclose', function() {
+            this.panel.classList.remove('panel-open');
+            this.panel.removeEventListener('click', closenav);
+        });
     </script>
 
     </body>
