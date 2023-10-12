@@ -102,6 +102,8 @@
                     <dt>Add User</dt>
                     <dd>
                         <pre>net user /add $USERNAME$ $PASSWORD$</pre>
+                        <p>It may timeout so do the following if password is long</p>
+                        <pre>net user /add $USERNAME$ $PASSWORD$ /Y</pre>
                         <p>With the password you need to double the First symbol aka %% for %</p>
                     </dd>
                     <dt>Add User to Local/Device Administrators</dt>
@@ -114,6 +116,8 @@
                     <dt>Reset Local Account password</dt>
                     <dd>
                         <pre>net user $USERNAME$ $PASSWORD$</pre>
+                        <p>It may timeout so do the following if password is long</p>
+                        <pre>net user /add $USERNAME$ $PASSWORD$ /Y</pre>
                         <p>With the password you need to double the First symbol aka %% for %</p>
                     </dd>
                     <dt>Make Password never expire</dt>
@@ -134,7 +138,10 @@
                     <dt>Get bitlocker key/password</dt>
                     <dd>
                         <pre>for /F "tokens=1,2" %%a in ('manage-bde -protectors -get C: -Type recoverypassword | findstr ID') do manage-bde -protectors -adbackup c: -id %%b</pre>
+                        <p>Or</p>
+                        <pre>powershell (Get-BitLockerVolume -MountPoint C).KeyProtector.RecoveryPassword</pre>
                     </dd>
+
                     <dt>Get C: Protectors</dt>
                     <dd>
                         <pre>manage-bde -protectors C: -get</pre>
